@@ -7,6 +7,7 @@ import com.mindWar.mindWar.user.dto.UserDto;
 import com.mindWar.mindWar.user.service.UserService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/users")
+@CrossOrigin(origins = "*")
+@RequestMapping("api/users")
 public class UserController {
 
     private final UserService userService;
