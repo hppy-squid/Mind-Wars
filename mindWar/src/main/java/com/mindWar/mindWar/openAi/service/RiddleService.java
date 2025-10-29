@@ -22,15 +22,7 @@ public class RiddleService {
         this.restTemplate = restTemplate;
         this.riddleRepository = riddleRepository;
     }
-
-    // public OpenAiResponse sendChatResponse(String prompt) {
-
-
-    //     OpenAiRequest chatRequest = new OpenAiRequest("gpt-4o", prompt, 1);
-    //     OpenAiResponse response = restTemplate.postForObject(apiUrl, chatRequest, OpenAiResponse.class);
-
-    //     return response;
-    // }
+    
 
     public Riddle generateRiddle() {
         String prompt = "Ge mig en gåta och rätt svar på svenska i formatet: 'Gåta: ... Svar: ...'";
@@ -40,21 +32,33 @@ public class RiddleService {
 
         String content = response.getChoices().get(0).getMessage().getContent();
 
-        // Enkelt sätt att dela upp texten
-        String question = content.split("Svar:")[0].replace("Gåta:", "").trim();
+        String riddle = content.split("Svar:")[0].replace("Gåta:", "").trim();
         String answer = content.split("Svar:")[1].trim();
 
-        Riddle riddle = new Riddle(question, answer);
-        riddleRepository.save(riddle);
+        Riddle entity = new Riddle(riddle, answer);
+        Riddle saved = riddleRepository.save(entity);
 
-        return riddle;
+        return saved;
     }
 
     public boolean checkAnswer(Long riddleId, String userGuess) {
         Riddle riddle = riddleRepository.findById(riddleId)
                 .orElseThrow(() -> new RuntimeException("Riddle not found"));
 
-        return riddle.getAnswer().equalsIgnoreCase(userGuess.trim());
+        return isCloseEnough(userGuess, riddle.getAnswer());
+    }
+
+     private boolean isCloseEnough(String guess, String answer) {
+        if (guess == null || answer == null) return false;
+
+        String normalizedGuess = guess.trim().toLowerCase().replaceAll("[^a-zåäö0-9 ]", "");
+        String normalizedAnswer = answer.trim().toLowerCase().replaceAll("[^a-zåäö0-9 ]", "");
+
+        normalizedGuess = normalizedGuess.replaceAll("\\s+", " ").trim();
+        normalizedAnswer = normalizedAnswer.replaceAll("\\s+", " ").trim();
+
+        // Exakt eller delvis matchning
+        return normalizedAnswer.contains(normalizedGuess) || normalizedGuess.contains(normalizedAnswer);
     }
     
 }

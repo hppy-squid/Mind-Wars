@@ -26,7 +26,7 @@ public class UserController {
         this.userService = userService;
     }
 
-@GetMapping("getUser")
+@GetMapping("/getUser")
 public ResponseEntity<UserDto> getUser(@RequestParam Long id) {
    UserDto userdto = userService.getUserById(id);
     return ResponseEntity.ok(userdto);

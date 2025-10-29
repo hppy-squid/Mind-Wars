@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 @Entity
 public class Riddle {
 
-        @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
@@ -36,6 +36,9 @@ public class Riddle {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+    public Long getId() {
+        return id;
     }
     
 }
