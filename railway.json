@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "java",
+    "buildCommand": "cd mindWar && ./mvnw clean package -DskipTests"
+  },
+  "deploy": {
+    "startCommand": "java -jar mindWar/target/*.jar"
+  }
+}
