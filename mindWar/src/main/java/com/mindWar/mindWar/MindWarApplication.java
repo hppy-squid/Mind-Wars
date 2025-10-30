@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.mindWar.mindWar")
 public class MindWarApplication {
 
 	public static void main(String[] args) {
