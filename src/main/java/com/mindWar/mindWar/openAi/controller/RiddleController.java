@@ -1,6 +1,7 @@
 package com.mindWar.mindWar.openAi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,24 +18,22 @@ import com.mindWar.mindWar.openAi.service.RiddleService;
 @RequestMapping("/api/riddle")
 public class RiddleController {
 
+  private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     private RiddleService riddleService;
 
-      public RiddleController(RiddleService riddleService) {
+      public RiddleController(RiddleService riddleService, SimpMessagingTemplate messagingTemplate) {
         this.riddleService = riddleService;
+        this.messagingTemplate = messagingTemplate;
     }
 
+    @PostMapping("/trigger")
+public void triggerRiddle() {
+    Riddle newRiddle = riddleService.generateRiddle();
+    messagingTemplate.convertAndSend("/topic/riddle", newRiddle);
+}
 
-//     @PostMapping("/chat")
-//     public String chat(@RequestBody String prompt) { 
-        
-//         OpenAiResponse response = riddleService.sendChatResponse("Ge mig en en gåta och rätt svar på svenska.");
-
-
-//         return response.getChoices().get(0).getMessage().getContent();
-    
-// }
   @PostMapping("/generate")
     public Riddle generateRiddle() {
         return riddleService.generateRiddle();
