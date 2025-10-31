@@ -44,10 +44,12 @@ public class StompController {
 
  @MessageMapping("/riddle/next")
     public void nextRiddle() {
+        System.out.println("✅ Riddle request received!");
         Riddle newRiddle = riddleService.generateRiddle();
 
         // skicka ut till alla spelare via topic
         messagingTemplate.convertAndSend("/topic/riddle", newRiddle);
+        System.out.println("🧩 Sent riddle: " + newRiddle);
     }
 
     @MessageMapping("/riddle/correct")
